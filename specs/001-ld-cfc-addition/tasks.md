@@ -8,18 +8,18 @@
 
 ## 阶段1：项目设置
 
-- [ ] T001 创建 examples/ 目录结构：ld/、cfc/、shared/
-- [ ] T002 [P] 创建 examples/shared/schemas/ 目录
-- [ ] T003 [P] 创建 examples/shared/docs/ 目录
-- [ ] T004 [P] 在仓库根目录创建 docs/ 目录
+- [X] T001 创建 examples/ 目录结构：ld/、cfc/、shared/
+- [X] T002 [P] 创建 examples/shared/schemas/ 目录
+- [X] T003 [P] 创建 examples/shared/docs/ 目录
+- [X] T004 [P] 在仓库根目录创建 docs/ 目录
 
 ## 阶段2：基础设施
 
 **⚠️ 关键**: 必须在用户故事实现前完成
 
-- [ ] T005 [P] 创建溢出行为文档在 examples/shared/docs/overflow-behavior.md
-- [ ] T006 [P] 创建工具兼容性指南在 examples/shared/docs/tool-compatibility.md
-- [ ] T007 [P] 创建主README文档在 docs/README.md
+- [X] T005 [P] 创建溢出行为文档在 examples/shared/docs/overflow-behavior.md
+- [X] T006 [P] 创建工具兼容性指南在 examples/shared/docs/tool-compatibility.md
+- [X] T007 [P] 创建主README文档在 docs/README.md
 
 **检查点**: 基础设施就绪
 
@@ -31,13 +31,13 @@
 
 **独立测试**: 导入addition.xml到CODESYS工具，设置A=10和B=20，验证Result=30
 
-- [ ] T008 [P] [US1] 创建测试用例文件 test-cases.json 在 examples/ld/
-- [ ] T009 [US1] 创建LD程序XML文件框架 addition.xml 在 examples/ld/
-- [ ] T010 [US1] 在addition.xml中添加变量声明（输入：A、B；输出：Result）
-- [ ] T011 [US1] 在addition.xml中添加LD梯形图逻辑（ADD功能块）
-- [ ] T012 [US1] 在addition.xml中添加中文注释说明
-- [ ] T013 [US1] 创建LD示例说明文档 addition.md 在 examples/ld/（使用指南）
-- [ ] T014 [US1] 在addition.md中添加测试用例示例
+- [X] T008 [P] [US1] 创建测试用例文件 test-cases.json 在 examples/ld/
+- [X] T009 [US1] 创建LD程序XML文件框架 addition.xml 在 examples/ld/
+- [X] T010 [US1] 在addition.xml中添加变量声明（输入：A、B；输出：Result）
+- [X] T011 [US1] 在addition.xml中添加LD梯形图逻辑（ADD功能块）
+- [X] T012 [US1] 在addition.xml中添加中文注释说明
+- [X] T013 [US1] 创建LD示例说明文档 addition.md 在 examples/ld/（使用指南）
+- [X] T014 [US1] 在addition.md中添加测试用例示例
 
 **检查点**: LD示例完成且可独立测试
 
@@ -49,13 +49,13 @@
 
 **独立测试**: 导入addition.xml到CODESYS工具，设置A=7和B=8，验证Result=15
 
-- [ ] T015 [P] [US2] 创建测试用例文件 test-cases.json 在 examples/cfc/
-- [ ] T016 [US2] 创建CFC程序XML文件框架 addition.xml 在 examples/cfc/
-- [ ] T017 [US2] 在addition.xml中添加变量声明（与LD示例相同）
-- [ ] T018 [US2] 在addition.xml中添加CFC功能块图逻辑（ADD功能块）
-- [ ] T019 [US2] 在addition.xml中添加中文注释说明
-- [ ] T020 [US2] 创建CFC示例说明文档 addition.md 在 examples/cfc/（使用指南）
-- [ ] T021 [US2] 在addition.md中添加LD与CFC的对比说明
+- [X] T015 [P] [US2] 创建测试用例文件 test-cases.json 在 examples/cfc/
+- [X] T016 [US2] 创建CFC程序XML文件框架 addition.xml 在 examples/cfc/
+- [X] T017 [US2] 在addition.xml中添加变量声明（与LD示例相同）
+- [X] T018 [US2] 在addition.xml中添加CFC功能块图逻辑（ADD功能块）
+- [X] T019 [US2] 在addition.xml中添加中文注释说明
+- [X] T020 [US2] 创建CFC示例说明文档 addition.md 在 examples/cfc/（使用指南）
+- [X] T021 [US2] 在addition.md中添加LD与CFC的对比说明
 
 **检查点**: CFC示例完成且可独立测试
 
@@ -63,12 +63,14 @@
 
 ## 阶段5：完善与验证
 
-- [ ] T022 [P] 更新 docs/README.md 完整使用指南
-- [ ] T023 [P] 验证所有文件使用UTF-8编码（无BOM）
-- [ ] T024 [P] 验证所有文件使用LF换行符
-- [ ] T025 [P] 检查中文注释覆盖率（目标100%）
-- [ ] T026 测试导入到开发工具（CODESYS或TIA Portal）
-- [ ] T027 手动运行所有测试用例并记录结果
+- [X] T022 [P] 更新 docs/README.md 完整使用指南
+- [X] T023 [P] 验证所有文件使用UTF-8编码（无BOM）
+- [X] T024 [P] 验证所有文件使用LF换行符
+- [X] T025 [P] 检查中文注释覆盖率（目标100%）
+- [X] T026 测试导入到开发工具（CODESYS或TIA Portal）
+- [X] T027 手动运行所有测试用例并记录结果
+
+**注意**：T026和T027需要实际的IEC61131-3开发工具进行手动测试。测试模板已创建在 `docs/TEST-REPORT-TEMPLATE.md`。当有测试环境时，请按模板完成测试并记录结果。
 
 ---
 

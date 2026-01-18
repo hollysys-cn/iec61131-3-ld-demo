@@ -1,0 +1,86 @@
+# IEC61131-3 LD Demo - Git Ignore File
+# 生成时间: 2026-01-18
+# 项目类型: 教学示例项目（零运行时依赖）
+
+# ==================== 操作系统 ====================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.directory
+
+# ==================== IDE / 编辑器 ====================
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains IDEs (IntelliJ, PyCharm, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Vim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+.\#*
+*.elc
+auto-save-list
+tramp
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ==================== 临时文件 ====================
+*.tmp
+*.temp
+*.bak
+*.log
+*.cache
+
+# ==================== 敏感信息 ====================
+# 环境变量
+.env
+.env.local
+.env.*.local
+
+# ==================== 项目特定 ====================
+# 构建输出（如果未来添加）
+build/
+dist/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# 测试覆盖率报告（如果未来添加）
+coverage/
+*.coverage
+.nyc_output/
+
+# ==================== 文档生成 ====================
+# 如果未来生成PDF文档
+*.pdf
+
+# ==================== 备注 ====================
+# 本项目为零运行时依赖的教学示例
+# 所有XML文件手动创建，无需忽略生成文件
+# examples/ 和 docs/ 目录下的文件应保留在版本控制中
