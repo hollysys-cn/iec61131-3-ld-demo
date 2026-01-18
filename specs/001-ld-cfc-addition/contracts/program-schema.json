@@ -1,0 +1,280 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IEC61131-3 图形化编程程序 JSON Schema",
+  "description": "定义 LD/CFC 程序的 JSON 数据格式和验证规则",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["id", "name", "type", "version", "created", "modified", "variables", "functionBlocks", "graphicElements", "compileStatus"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "程序唯一标识符",
+      "pattern": "^proj-[0-9a-f]{3,}$",
+      "examples": ["proj-001", "proj-abc123"]
+    },
+    "name": {
+      "type": "string",
+      "description": "程序名称",
+      "minLength": 1,
+      "maxLength": 50,
+      "examples": ["简单加法", "LD加法演示"]
+    },
+    "type": {
+      "type": "string",
+      "enum": ["LD", "CFC"],
+      "description": "程序类型：LD（梯形图）或 CFC（连续功能图）"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "数据模型版本（语义化版本）",
+      "examples": ["1.0.0"]
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "创建时间（ISO 8601 格式）"
+    },
+    "modified": {
+      "type": "string",
+      "format": "date-time",
+      "description": "最后修改时间（ISO 8601 格式）"
+    },
+    "variables": {
+      "type": "array",
+      "description": "变量列表",
+      "minItems": 2,
+      "items": {
+        "$ref": "#/definitions/Variable"
+      }
+    },
+    "functionBlocks": {
+      "type": "array",
+      "description": "功能块列表",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/FunctionBlock"
+      }
+    },
+    "graphicElements": {
+      "type": "array",
+      "description": "图形元素列表",
+      "items": {
+        "$ref": "#/definitions/GraphicElement"
+      }
+    },
+    "compiledCode": {
+      "type": "string",
+      "description": "编译后的 JavaScript 代码（可选，缓存用）"
+    },
+    "compileStatus": {
+      "type": "string",
+      "enum": ["uncompiled", "compiled", "error"],
+      "description": "编译状态"
+    }
+  },
+  "definitions": {
+    "Variable": {
+      "type": "object",
+      "required": ["name", "dataType", "direction", "value", "defaultValue", "readonly"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-zA-Z_][a-zA-Z0-9_]{0,19}$",
+          "description": "变量名（1-20字符，字母/数字/下划线，不能以数字开头）",
+          "examples": ["input1", "output", "temp_value"]
+        },
+        "dataType": {
+          "type": "string",
+          "enum": ["INT"],
+          "description": "数据类型（当前仅支持 INT）"
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["INPUT", "OUTPUT", "INTERMEDIATE"],
+          "description": "变量方向"
+        },
+        "value": {
+          "type": "integer",
+          "minimum": -32768,
+          "maximum": 32767,
+          "description": "当前值（INT 范围：-32768 到 32767）"
+        },
+        "defaultValue": {
+          "type": "integer",
+          "minimum": -32768,
+          "maximum": 32767,
+          "description": "默认值"
+        },
+        "readonly": {
+          "type": "boolean",
+          "description": "是否只读（OUTPUT 变量为 true）"
+        }
+      }
+    },
+    "FunctionBlock": {
+      "type": "object",
+      "required": ["id", "type", "position", "inputs", "outputs"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^fb-[0-9a-f]{3,}$",
+          "description": "功能块唯一标识符",
+          "examples": ["fb-001", "fb-add-01"]
+        },
+        "type": {
+          "type": "string",
+          "enum": ["ADD"],
+          "description": "功能块类型（当前仅支持 ADD）"
+        },
+        "position": {
+          "$ref": "#/definitions/Point",
+          "description": "功能块在画布中的位置"
+        },
+        "inputs": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "string",
+            "description": "输入变量名"
+          },
+          "description": "输入变量名列表（ADD 功能块必须 2 个）"
+        },
+        "outputs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "description": "输出变量名"
+          },
+          "description": "输出变量名列表（ADD 功能块必须 1 个）"
+        }
+      }
+    },
+    "GraphicElement": {
+      "type": "object",
+      "required": ["id", "elementType", "position", "size", "connections", "visualProps"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^ge-[0-9a-f]{3,}$",
+          "description": "图形元素唯一标识符",
+          "examples": ["ge-001", "ge-conn-12"]
+        },
+        "elementType": {
+          "type": "string",
+          "enum": ["CONTACT", "COIL", "BLOCK", "CONNECTION"],
+          "description": "图形元素类型"
+        },
+        "position": {
+          "$ref": "#/definitions/Point",
+          "description": "元素位置"
+        },
+        "size": {
+          "$ref": "#/definitions/Size",
+          "description": "元素尺寸"
+        },
+        "connections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Connection"
+          },
+          "description": "连接关系列表"
+        },
+        "visualProps": {
+          "$ref": "#/definitions/VisualProperties",
+          "description": "视觉属性"
+        },
+        "relatedBlockId": {
+          "type": "string",
+          "description": "关联的功能块 ID（仅 BLOCK 类型）"
+        },
+        "relatedVariableName": {
+          "type": "string",
+          "description": "关联的变量名（仅 CONTACT/COIL 类型）"
+        }
+      }
+    },
+    "Point": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {
+        "x": {
+          "type": "number",
+          "minimum": 0,
+          "description": "X 坐标（像素）"
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Y 坐标（像素）"
+        }
+      }
+    },
+    "Size": {
+      "type": "object",
+      "required": ["width", "height"],
+      "properties": {
+        "width": {
+          "type": "number",
+          "minimum": 0,
+          "description": "宽度（像素）"
+        },
+        "height": {
+          "type": "number",
+          "minimum": 0,
+          "description": "高度（像素）"
+        }
+      }
+    },
+    "Connection": {
+      "type": "object",
+      "required": ["from", "to"],
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "起点元素 ID 或变量名"
+        },
+        "to": {
+          "type": "string",
+          "description": "终点元素 ID 或变量名"
+        },
+        "fromPort": {
+          "type": "string",
+          "description": "起点端口名称（可选）"
+        },
+        "toPort": {
+          "type": "string",
+          "description": "终点端口名称（可选）"
+        }
+      }
+    },
+    "VisualProperties": {
+      "type": "object",
+      "properties": {
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "颜色（十六进制格式）",
+          "examples": ["#4CAF50", "#FF5722"]
+        },
+        "strokeWidth": {
+          "type": "number",
+          "minimum": 1,
+          "description": "线宽（像素）"
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 20,
+          "description": "标签文本"
+        },
+        "highlighted": {
+          "type": "boolean",
+          "description": "是否高亮（选中状态）"
+        }
+      }
+    }
+  }
+}

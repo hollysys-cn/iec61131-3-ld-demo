@@ -1,0 +1,69 @@
+[
+  {
+    "id": 1,
+    "scenario": "正常加法",
+    "description": "基本功能验证",
+    "inputs": {
+      "A": 7,
+      "B": 8
+    },
+    "expected": {
+      "Result": 15
+    },
+    "overflow": false
+  },
+  {
+    "id": 2,
+    "scenario": "负数加法",
+    "description": "负数处理验证",
+    "inputs": {
+      "A": -10,
+      "B": 5
+    },
+    "expected": {
+      "Result": -5
+    },
+    "overflow": false
+  },
+  {
+    "id": 3,
+    "scenario": "正向溢出",
+    "description": "INT类型正向溢出回绕行为",
+    "inputs": {
+      "A": 32766,
+      "B": 2
+    },
+    "expected": {
+      "Result": -32768
+    },
+    "overflow": true,
+    "overflowType": "positive"
+  },
+  {
+    "id": 4,
+    "scenario": "负向溢出",
+    "description": "INT类型负向溢出回绕行为",
+    "inputs": {
+      "A": -32767,
+      "B": -2
+    },
+    "expected": {
+      "Result": 32767
+    },
+    "overflow": true,
+    "overflowType": "negative"
+  },
+  {
+    "id": 5,
+    "scenario": "零值",
+    "description": "边界值测试",
+    "inputs": {
+      "A": 0,
+      "B": 0
+    },
+    "expected": {
+      "Result": 0
+    },
+    "overflow": false
+  }
+]
