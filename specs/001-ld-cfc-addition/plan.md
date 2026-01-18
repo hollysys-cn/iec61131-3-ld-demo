@@ -9,15 +9,15 @@
 
 ## Technical Context
 
-**Language/Version**: NEEDS CLARIFICATION（PLCopen XML生成工具的实现语言 - Python/JavaScript/其他）
-**Primary Dependencies**: NEEDS CLARIFICATION（XML生成库、IEC61131-3标准库支持、交互式运行引擎）
-**Storage**: Files（PLCopen XML文件，Markdown文档）
-**Testing**: NEEDS CLARIFICATION（XML schema验证工具、示例程序功能测试框架）
-**Target Platform**: NEEDS CLARIFICATION（Web浏览器/桌面应用/命令行工具 - 用于交互式运行）
+**Language/Version**: 手动创建（无编程语言依赖）
+**Primary Dependencies**: 无运行时依赖（零依赖方案）
+**Storage**: Files（PLCopen XML v2.01文件，Markdown文档）
+**Testing**: xmllint（可选，MIT许可）+ 手动测试 + IEC61131-3开发工具验证
+**Target Platform**: IEC61131-3兼容工具（CODESYS、TIA Portal、CX-Programmer等）
 **Project Type**: Single project（教学示例项目）
-**Performance Goals**: 交互式运行响应时间 < 100ms，XML文件生成时间 < 1s
-**Constraints**: 必须符合PLCopen XML标准，必须兼容主流IEC61131-3开发工具，文件大小 < 100KB
-**Scale/Scope**: 2个示例程序文件（LD + CFC），5-10个测试用例，完整的中文注释文档
+**Performance Goals**: XML文件大小 < 50KB，手动测试完成时间 < 5分钟
+**Constraints**: 必须符合PLCopen XML v2.01标准，必须兼容主流IEC61131-3开发工具，所有文档使用简体中文
+**Scale/Scope**: 2个示例程序文件（LD + CFC），5个测试用例，完整的中文注释文档
 
 ## Constitution Check
 
