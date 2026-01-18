@@ -1,368 +1,214 @@
-# Tasks: IEC61131-3 图形化编程加法演示
+# 任务清单：IEC61131-3 LD/CFC 加法示例
 
-**Input**: Design documents from `/specs/001-ld-cfc-addition/`
-**Prerequisites**: plan.md ✓, spec.md ✓, research.md ✓, data-model.md ✓, contracts/ ✓
+**功能**: 001-ld-cfc-addition
+**日期**: 2026-01-18
+**输入**: 设计文档来自 `/specs/001-ld-cfc-addition/`
 
-**Tests**: 本项目规格未明确要求 TDD，因此测试任务安排在每个用户故事实现完成后进行验证测试。
+**实现方法**: 手动创建PLCopen XML文件（零依赖），完整中文文档
 
-**Organization**: 任务按用户故事分组，每个故事可独立实现和测试。
+## 阶段1：项目设置
 
-## Format: `[ID] [P?] [Story] Description`
+- [ ] T001 创建 examples/ 目录结构：ld/、cfc/、shared/
+- [ ] T002 [P] 创建 examples/shared/schemas/ 目录
+- [ ] T003 [P] 创建 examples/shared/docs/ 目录
+- [ ] T004 [P] 在仓库根目录创建 docs/ 目录
 
-- **[P]**: 可并行执行（不同文件，无依赖）
-- **[Story]**: 所属用户故事（如 US1, US2, US3）
-- 任务描述包含具体文件路径
+## 阶段2：基础设施
 
-## Path Conventions
+**⚠️ 关键**: 必须在用户故事实现前完成
 
-本项目为 Web 单页应用，路径结构：
-- **源代码**: `frontend/src/`
-- **测试**: `frontend/tests/`
-- **配置**: 仓库根目录
+- [ ] T005 [P] 创建溢出行为文档在 examples/shared/docs/overflow-behavior.md
+- [ ] T006 [P] 创建工具兼容性指南在 examples/shared/docs/tool-compatibility.md
+- [ ] T007 [P] 创建主README文档在 docs/README.md
 
----
-
-## Phase 1: Setup (项目初始化)
-
-**Purpose**: 建立项目基础结构和开发环境
-
-- [ ] T001 创建项目根目录和基本结构（frontend/, docs/, .github/）
-- [ ] T002 初始化 npm 项目并配置淘宝镜像源（npm config set registry）
-- [ ] T003 [P] 安装核心依赖（package.json: vue@^3.3, vite@^4.3, fabric@^5.3）
-- [ ] T004 [P] 安装开发依赖（jest@^29, @playwright/test@^1.35, prettier, eslint）
-- [ ] T005 [P] 配置 Vite 构建工具（vite.config.js: resolve alias, dev server, build output）
-- [ ] T006 [P] 配置编辑器规范（.editorconfig: UTF-8, LF, indent_size=2）
-- [ ] T007 [P] 配置代码格式化（.prettierrc: semi=false, singleQuote=true, printWidth=100）
-- [ ] T008 创建 HTML 入口文件（frontend/public/index.html）
-- [ ] T009 创建 Vue 应用入口（frontend/src/main.js: createApp, mount）
-- [ ] T010 创建根组件骨架（frontend/src/App.vue: template, script, style）
-- [ ] T011 [P] 配置国内镜像源说明文档（README.md: npm 淘宝镜像配置）
+**检查点**: 基础设施就绪
 
 ---
 
-## Phase 2: Foundational (核心基础设施)
+## 阶段3：用户故事1 - LD梯形图示例 (优先级P1) 🎯 MVP
 
-**Purpose**: 所有用户故事依赖的共享基础模块
+**目标**: 创建LD梯形图加法示例程序
 
-**⚠️ CRITICAL**: 必须完成此阶段后才能开始用户故事实现
+**独立测试**: 导入addition.xml到CODESYS工具，设置A=10和B=20，验证Result=30
 
-### 数据模型基础
+- [ ] T008 [P] [US1] 创建测试用例文件 test-cases.json 在 examples/ld/
+- [ ] T009 [US1] 创建LD程序XML文件框架 addition.xml 在 examples/ld/
+- [ ] T010 [US1] 在addition.xml中添加变量声明（输入：A、B；输出：Result）
+- [ ] T011 [US1] 在addition.xml中添加LD梯形图逻辑（ADD功能块）
+- [ ] T012 [US1] 在addition.xml中添加中文注释说明
+- [ ] T013 [US1] 创建LD示例说明文档 addition.md 在 examples/ld/（使用指南）
+- [ ] T014 [US1] 在addition.md中添加测试用例示例
 
-- [ ] T012 [P] 创建 ProgramProject 模型（frontend/src/models/ProgramModel.js: 接口定义、验证规则）
-- [ ] T013 [P] 创建 Variable 模型（frontend/src/models/VariableModel.js: INT 类型、方向、验证）
-- [ ] T014 [P] 创建 FunctionBlock 模型（frontend/src/models/FunctionBlockModel.js: ADD 类型、输入输出）
-- [ ] T015 [P] 创建 GraphicElement 模型（frontend/src/models/GraphicElementModel.js: 元素类型、位置、连接）
-
-### 存储服务基础
-
-- [ ] T016 实现 JSON Schema 验证器（frontend/src/services/storage/SchemaValidator.js: 基于 program-schema.json）
-- [ ] T017 实现文件管理器（frontend/src/services/storage/FileManager.js: 保存/加载 JSON，集成 SchemaValidator）
-- [ ] T018 [P] 实现本地存储适配器（frontend/src/services/storage/LocalStorage.js: localStorage API 封装）
-
-### 执行引擎基础
-
-- [ ] T019 实现事件驱动的变量存储（frontend/src/services/runtime/VariableStore.js: Proxy + EventTarget）
-- [ ] T020 [P] 实现溢出检测器（frontend/src/services/runtime/OverflowDetector.js: INT 范围检查、警告事件）
-- [ ] T021 创建执行引擎框架（frontend/src/services/runtime/Executor.js: 执行 JavaScript 代码、变量更新）
-
-### 工具函数基础
-
-- [ ] T022 [P] 实现输入验证工具（frontend/src/utils/validation.js: 变量名、INT 范围、保留字检查）
-- [ ] T023 [P] 实现格式化工具（frontend/src/utils/formatting.js: 日期、数值格式化）
-
-### 通用组件基础
-
-- [ ] T024 [P] 创建文件选择器组件（frontend/src/components/common/FileSelector.vue: 打开/保存对话框）
-- [ ] T025 [P] 创建警告对话框组件（frontend/src/components/common/AlertDialog.vue: 溢出警告显示）
-
-**Checkpoint**: 基础设施就绪 - 用户故事可以开始并行开发
+**检查点**: LD示例完成且可独立测试
 
 ---
 
-## Phase 3: User Story 1 - LD 梯形图加法程序 (Priority: P1) 🎯 MVP
+## 阶段4：用户故事2 - CFC功能块图示例 (优先级P2)
 
-**Goal**: 实现基于 LD 图形化编程语言的加法程序编辑、编译和执行
+**目标**: 创建CFC功能块图加法示例程序
 
-**Independent Test**: 创建一个 LD 程序文件，设置 Input1=5, Input2=3，运行后验证 Output=8
+**独立测试**: 导入addition.xml到CODESYS工具，设置A=7和B=8，验证Result=15
 
-### LD 编译器实现
+- [ ] T015 [P] [US2] 创建测试用例文件 test-cases.json 在 examples/cfc/
+- [ ] T016 [US2] 创建CFC程序XML文件框架 addition.xml 在 examples/cfc/
+- [ ] T017 [US2] 在addition.xml中添加变量声明（与LD示例相同）
+- [ ] T018 [US2] 在addition.xml中添加CFC功能块图逻辑（ADD功能块）
+- [ ] T019 [US2] 在addition.xml中添加中文注释说明
+- [ ] T020 [US2] 创建CFC示例说明文档 addition.md 在 examples/cfc/（使用指南）
+- [ ] T021 [US2] 在addition.md中添加LD与CFC的对比说明
 
-- [ ] T026 [US1] 实现 LD 编译器（frontend/src/services/compiler/LDCompiler.js: 解析 LD 图形元素）
-- [ ] T027 [US1] 实现 JavaScript 代码生成器（frontend/src/services/compiler/CodeGenerator.js: 生成可执行 JS 代码）
-
-### LD 图形编辑器实现
-
-- [ ] T028 [US1] 创建 Canvas 基础组件（frontend/src/components/editor/Canvas.vue: Fabric.js 初始化、画布管理）
-- [ ] T029 [US1] 实现 LD 编辑器组件（frontend/src/components/editor/LadderEditor.vue: 触点、线圈、功能块绘制）
-- [ ] T030 [US1] 实现工具栏组件（frontend/src/components/editor/Toolbar.vue: 元素选择、编译、运行按钮）
-
-### LD 程序管理和执行
-
-- [ ] T031 [US1] 实现变量定义界面（frontend/src/components/editor/VariablePanel.vue: 添加/编辑/删除变量）
-- [ ] T032 [US1] 实现 LD 程序编译流程（集成 LDCompiler 到 App.vue: 编译按钮事件处理）
-- [ ] T033 [US1] 实现 LD 程序执行流程（集成 Executor 到 App.vue: 运行按钮事件处理）
-- [ ] T034 [US1] 实现输入变量动态修改（VariablePanel: 运行时修改输入值）
-- [ ] T035 [US1] 实现输出变量实时显示（VariablePanel: 监听变量变更事件）
-
-### LD 验证测试
-
-- [ ] T036 [US1] E2E 测试：创建并运行 LD 加法程序（frontend/tests/e2e/ld-program.spec.js: 完整用户流程）
-- [ ] T037 [P] [US1] 单元测试：LDCompiler（frontend/tests/unit/services/compiler/LDCompiler.test.js）
-- [ ] T038 [P] [US1] 单元测试：VariableStore（frontend/tests/unit/services/runtime/VariableStore.test.js）
-- [ ] T039 [P] [US1] 单元测试：OverflowDetector（frontend/tests/unit/services/runtime/OverflowDetector.test.js）
-
-**Checkpoint**: 用户故事 1 完整可用 - 可独立测试和演示 MVP
+**检查点**: CFC示例完成且可独立测试
 
 ---
 
-## Phase 4: User Story 2 - CFC 连续功能图加法程序 (Priority: P2)
+## 阶段5：完善与验证
 
-**Goal**: 实现基于 CFC 图形化编程语言的加法程序编辑、编译和执行
-
-**Independent Test**: 创建一个独立的 CFC 程序文件，使用相同输入输出定义，验证加法功能正常
-
-### CFC 编译器实现
-
-- [ ] T040 [US2] 实现 CFC 编译器（frontend/src/services/compiler/CFCCompiler.js: 解析 CFC 功能块和连接线）
-- [ ] T041 [US2] 扩展代码生成器支持 CFC（frontend/src/services/compiler/CodeGenerator.js: 添加 CFC 代码生成逻辑）
-
-### CFC 图形编辑器实现
-
-- [ ] T042 [US2] 实现 CFC 编辑器组件（frontend/src/components/editor/CFCEditor.vue: 功能块拖拽、连接线绘制）
-- [ ] T043 [US2] 实现功能块连接逻辑（CFCEditor.vue: 输入输出引脚连接、连接验证）
-
-### CFC 程序管理和执行
-
-- [ ] T044 [US2] 实现程序类型切换（App.vue: LD/CFC 切换，保存/加载不同类型程序）
-- [ ] T045 [US2] 实现 CFC 程序编译流程（集成 CFCCompiler 到 App.vue）
-- [ ] T046 [US2] 实现 CFC 程序执行流程（复用 Executor，支持 CFC 编译输出）
-
-### CFC 验证测试
-
-- [ ] T047 [US2] E2E 测试：创建并运行 CFC 加法程序（frontend/tests/e2e/cfc-program.spec.js: 完整用户流程）
-- [ ] T048 [P] [US2] 单元测试：CFCCompiler（frontend/tests/unit/services/compiler/CFCCompiler.test.js）
-
-**Checkpoint**: 用户故事 1 和 2 都可独立工作
+- [ ] T022 [P] 更新 docs/README.md 完整使用指南
+- [ ] T023 [P] 验证所有文件使用UTF-8编码（无BOM）
+- [ ] T024 [P] 验证所有文件使用LF换行符
+- [ ] T025 [P] 检查中文注释覆盖率（目标100%）
+- [ ] T026 测试导入到开发工具（CODESYS或TIA Portal）
+- [ ] T027 手动运行所有测试用例并记录结果
 
 ---
 
-## Phase 5: User Story 3 - 可视化调试与监控 (Priority: P3)
-
-**Goal**: 提供程序运行时的实时变量监控界面
-
-**Independent Test**: 运行已有 LD 或 CFC 程序，通过监控界面观察变量值实时变化
-
-### 监控界面实现
-
-- [ ] T049 [P] [US3] 实现变量监控窗口组件（frontend/src/components/monitor/VariableMonitor.vue: 变量列表、值显示）
-- [ ] T050 [P] [US3] 实现状态面板组件（frontend/src/components/monitor/StatusPanel.vue: 编译状态、执行状态、警告信息）
-
-### 事件驱动更新
-
-- [ ] T051 [US3] 集成变量变更事件监听（VariableMonitor.vue: 监听 VariableStore 事件，实时更新显示）
-- [ ] T052 [US3] 集成溢出警告事件监听（AlertDialog.vue: 监听 OverflowDetector 事件，弹出警告）
-
-### 监控验证测试
-
-- [ ] T053 [US3] E2E 测试：变量监控实时更新（frontend/tests/e2e/monitoring.spec.js: 修改输入，验证监控界面更新）
-- [ ] T054 [P] [US3] 单元测试：VariableMonitor 事件响应（frontend/tests/unit/components/monitor/VariableMonitor.test.js）
-
-**Checkpoint**: 所有用户故事独立功能完整
-
----
-
-## Phase 6: Polish & Cross-Cutting Concerns (完善和跨功能优化)
-
-**Purpose**: 影响多个用户故事的改进和完善
-
-- [ ] T055 [P] 完善用户文档（README.md: 快速开始、功能说明、开发指南）
-- [ ] T056 [P] 添加中文注释和 JSDoc（所有源文件: 函数、类、模块说明）
-- [ ] T057 代码重构和优化（识别重复代码，提取公共函数）
-- [ ] T058 性能优化（Canvas 渲染优化，事件节流）
-- [ ] T059 [P] 边界情况测试（frontend/tests/unit/边界测试: 溢出、非法输入、空程序）
-- [ ] T060 运行 quickstart.md 验证（按照快速开始文档验证完整流程）
-- [ ] T061 安全性检查（输入验证、XSS 防护、代码注入防护）
-- [ ] T062 [P] 无障碍性改进（键盘导航、屏幕阅读器支持、ARIA 标签）
-
----
-
-## Dependencies & Execution Order
+## 依赖关系与执行顺序
 
 ### 阶段依赖
 
-- **Setup (Phase 1)**: 无依赖 - 可立即开始
-- **Foundational (Phase 2)**: 依赖 Setup 完成 - **阻塞所有用户故事**
-- **User Stories (Phase 3-5)**: 都依赖 Foundational 完成
-  - 用户故事可并行进行（如果有多人协作）
-  - 或按优先级顺序（P1 → P2 → P3）
-- **Polish (Phase 6)**: 依赖所需用户故事完成
+```
+阶段1（项目设置）
+    ↓
+阶段2（基础设施）← 阻塞所有用户故事
+    ↓
+    ├─→ 阶段3（US1: LD示例）─┐
+    └─→ 阶段4（US2: CFC示例）─┤
+                              ↓
+                      阶段5（完善）
+```
 
 ### 用户故事依赖
 
-- **User Story 1 (P1)**: Foundational 完成后可开始 - 无其他故事依赖
-- **User Story 2 (P2)**: Foundational 完成后可开始 - 复用 US1 的 Executor 和 VariableStore，但可独立测试
-- **User Story 3 (P3)**: Foundational 完成后可开始 - 依赖 US1 或 US2 的程序运行功能，但监控界面独立
+- **用户故事1（P1）**: LD梯形图示例
+  - 依赖：阶段2（基础设施）完成
+  - 与其他故事无依赖
+  - **MVP**: 仅此故事即可交付完整示例
 
-### 用户故事内部依赖
+- **用户故事2（P2）**: CFC功能块图示例
+  - 依赖：阶段2（基础设施）完成
+  - 与US1无依赖（可并行开发）
+  - **价值**: 提供对比学习
 
-- **US1 内部顺序**:
-  1. 编译器（T026, T027）
-  2. 编辑器（T028, T029, T030）
-  3. 程序管理（T031, T032, T033, T034, T035）
-  4. 测试（T036-T039）
+### 阶段内任务顺序
 
-- **US2 内部顺序**:
-  1. 编译器（T040, T041）
-  2. 编辑器（T042, T043）
-  3. 程序管理（T044, T045, T046）
-  4. 测试（T047, T048）
+**LD示例（US1）**:
+```
+T008（测试用例）- 可随时执行
+T009（XML框架）→ T010（变量）→ T011（逻辑）→ T012（注释）
+T013（文档）→ T014（测试示例）- 可在T008后开始
+T009-T014全部完成后执行验证
+```
 
-- **US3 内部顺序**:
-  1. 监控界面（T049, T050）
-  2. 事件集成（T051, T052）
-  3. 测试（T053, T054）
+**CFC示例（US2）**:
+```
+T015（测试用例）- 可随时执行
+T016（XML框架）→ T017（变量）→ T018（逻辑）→ T019（注释）
+T020（文档）→ T021（对比说明）- 可在T015后开始
+T016-T021全部完成后执行验证
+```
 
-### 并行执行机会
+### 并行机会
 
-**Phase 1 (Setup) 并行任务**:
-- T003, T004 可并行（不同 package.json 依赖组）
-- T005, T006, T007 可并行（不同配置文件）
-- T011 可并行（独立文档文件）
-
-**Phase 2 (Foundational) 并行任务**:
-- T012, T013, T014, T015 可并行（不同模型文件）
-- T018 可与 T016, T017 并行（不同存储模块）
-- T020 可与 T019, T021 并行（不同运行时模块）
-- T022, T023 可并行（不同工具文件）
-- T024, T025 可并行（不同组件文件）
-
-**Phase 3 (US1) 并行任务**:
-- T037, T038, T039 测试可并行（不同测试文件）
-
-**Phase 4 (US2) 并行任务**:
-- 无显著并行机会（大部分任务依赖 US1 基础）
-
-**Phase 5 (US3) 并行任务**:
-- T049, T050 可并行（不同组件文件）
-- T054 可与其他任务并行（独立测试文件）
-
-**Phase 6 (Polish) 并行任务**:
-- T055, T056, T059, T062 可并行（不同文件或模块）
-
-**跨用户故事并行**:
-- US1, US2, US3 在 Foundational 完成后可由不同开发者并行实现
+**阶段1（项目设置）**: T002、T003、T004标记[P] - 可并行执行
+**阶段2（基础设施）**: T005、T006、T007全部标记[P] - 可并行执行
+**阶段3和4**: US1与US2完全独立 - 可完全并行开发
+**阶段5（完善）**: T022-T025标记[P] - 可并行执行
 
 ---
 
-## Parallel Example: Foundational Phase
+## 并行执行示例
 
-```bash
-# 同时启动所有数据模型创建任务:
-并行任务组 1:
-- T012: 创建 ProgramProject 模型（frontend/src/models/ProgramModel.js）
-- T013: 创建 Variable 模型（frontend/src/models/VariableModel.js）
-- T014: 创建 FunctionBlock 模型（frontend/src/models/FunctionBlockModel.js）
-- T015: 创建 GraphicElement 模型（frontend/src/models/GraphicElementModel.js）
+### 场景1：顺序执行（单人开发）
 
-# 同时启动所有工具函数任务:
-并行任务组 2:
-- T022: 实现输入验证工具（frontend/src/utils/validation.js）
-- T023: 实现格式化工具（frontend/src/utils/formatting.js）
+```
+第1周: 阶段1-2（项目设置+基础设施）- 7个任务
+第2周: 阶段3（US1: LD示例）- 7个任务
+第3周: 阶段4（US2: CFC示例）- 7个任务
+第4周: 阶段5（完善）- 6个任务
+总时间: 4周
+```
 
-# 同时启动所有通用组件任务:
-并行任务组 3:
-- T024: 创建文件选择器组件（frontend/src/components/common/FileSelector.vue）
-- T025: 创建警告对话框组件（frontend/src/components/common/AlertDialog.vue）
+### 场景2：并行执行（双人协作）
+
+```
+第1周: 阶段1-2（项目设置+基础设施）- 7个任务（两人协作）
+第2周: 开发者A: 阶段3（US1: LD）| 开发者B: 阶段4（US2: CFC）- 并行
+第3周: 阶段5（完善）- 6个任务（两人协作标记[P]的任务）
+总时间: 3周
+```
+
+### 场景3：快速MVP（推荐）
+
+```
+第1-2天: 阶段1-2（项目设置+基础设施）- 7个任务
+第3-4天: 阶段3（仅US1: LD示例）- 7个任务
+第5天: 阶段5（部分完善，针对US1）- T022、T023-T027
+总时间: 5天交付MVP
 ```
 
 ---
 
-## Implementation Strategy
+## 实施策略
 
-### MVP First (仅用户故事 1)
+### MVP优先（推荐路径）
 
-1. 完成 Phase 1: Setup（项目初始化）
-2. 完成 Phase 2: Foundational（**关键 - 阻塞所有故事**）
-3. 完成 Phase 3: User Story 1（LD 梯形图）
-4. **停止并验证**: 独立测试 User Story 1
-5. 如准备就绪可部署/演示
+1. **第1周**: 完成阶段1-2（项目设置+基础设施）
+2. **第2周**: 完成阶段3（仅US1: LD示例）
+3. **交付MVP**: LD示例及完整文档
+4. **第3周**: 根据反馈添加阶段4（US2: CFC示例）
+5. **第4周**: 完成阶段5（最终完善）
 
-### 增量交付
+### 增量交付里程碑
 
-1. 完成 Setup + Foundational → 基础就绪
-2. 添加 User Story 1 → 独立测试 → 部署/演示（**MVP!**）
-3. 添加 User Story 2 → 独立测试 → 部署/演示
-4. 添加 User Story 3 → 独立测试 → 部署/演示
-5. 每个故事增加价值而不破坏已有功能
-
-### 多人团队并行策略
-
-如有多名开发者：
-
-1. 团队共同完成 Setup + Foundational
-2. Foundational 完成后：
-   - 开发者 A: User Story 1 (LD)
-   - 开发者 B: User Story 2 (CFC)
-   - 开发者 C: User Story 3 (监控)
-3. 各故事独立完成并集成
+- **里程碑1**: 阶段1-2完成 → 项目结构就绪
+- **里程碑2**: 阶段3完成 → LD示例可交付（MVP）
+- **里程碑3**: 阶段4完成 → CFC示例增加对比学习价值
+- **里程碑4**: 阶段5完成 → 生产级文档就绪
 
 ---
 
 ## 任务统计
 
-- **总任务数**: 62
-- **Setup 阶段**: 11 任务
-- **Foundational 阶段**: 14 任务
-- **User Story 1**: 14 任务
-- **User Story 2**: 9 任务
-- **User Story 3**: 6 任务
-- **Polish 阶段**: 8 任务
+- 项目设置: 4个任务
+- 基础设施: 3个任务
+- US1（LD示例）: 7个任务
+- US2（CFC示例）: 7个任务
+- 完善验证: 6个任务
+- **总计**: 27个任务
 
-### 按用户故事分组
-
-- **US1 (LD 梯形图)**: 14 任务 - 包含编译器、编辑器、执行流程、测试
-- **US2 (CFC 连续功能图)**: 9 任务 - 包含编译器、编辑器、执行流程、测试
-- **US3 (可视化监控)**: 6 任务 - 包含监控界面、事件集成、测试
-
-### 并行执行机会
-
-- **Setup 阶段**: 7 个并行任务（T003-T007, T011）
-- **Foundational 阶段**: 11 个并行任务（T012-T015, T018, T020, T022-T025）
-- **User Story 1**: 3 个并行测试任务（T037-T039）
-- **User Story 3**: 2 个并行组件任务（T049-T050）
-- **Polish 阶段**: 4 个并行任务（T055-T056, T059, T062）
-
-### MVP 范围建议
-
-**最小可行产品 (MVP)** = Phase 1 + Phase 2 + Phase 3 (User Story 1)
-- 共 **39 任务**（Setup 11 + Foundational 14 + US1 14）
-- 提供完整的 LD 梯形图加法程序演示
-- 可独立部署和演示
+**预计时间**: 3-4周（顺序）或 2-3周（并行）
 
 ---
 
-## 格式验证
+## 验证检查清单
 
-✅ 所有任务遵循 `- [ ] [ID] [P?] [Story?] Description with file path` 格式
-✅ 任务 ID 连续编号 T001-T062
-✅ [P] 标记仅用于可并行任务
-✅ [Story] 标记仅用于 Phase 3-5 的用户故事任务
-✅ 所有任务包含具体文件路径
-✅ Setup 和 Foundational 阶段无 [Story] 标记
-✅ 用户故事任务按 [US1], [US2], [US3] 标记
+功能标记完成前必须验证：
 
----
-
-## Notes
-
-- **[P] 任务** = 不同文件，无依赖关系
-- **[Story] 标签** 将任务映射到具体用户故事以便追溯
-- **每个用户故事** 应可独立完成和测试
-- **实现前验证** 测试失败（如果编写了测试）
-- **每个任务或逻辑组后提交** 代码
-- **在每个检查点停止** 以独立验证故事
-- **避免**: 模糊任务、同文件冲突、破坏独立性的跨故事依赖
+- [ ] 两个XML文件符合PLCopen XML v2.01标准
+- [ ] 所有5个测试用例在开发工具中通过
+- [ ] 所有中文注释完整（100%覆盖率）
+- [ ] 验证UTF-8无BOM编码
+- [ ] 验证LF换行符
+- [ ] 文档清晰度由非作者检查
+- [ ] 快速入门指南经新用户测试
+- [ ] 宪章检查通过（全部10项）
 
 ---
 
-*本文档由 `/speckit.tasks` 命令生成，基于 spec.md 用户故事和 plan.md 技术设计*
+## 备注
+
+- **零依赖**: 本项目无运行时依赖，所有文件手动创建
+- **工具兼容性**: XML文件经PLCopen schema验证，理论上兼容所有支持PLCopen XML的工具
+- **测试方式**: 采用手动测试，需要实际的IEC61131-3开发工具（如CODESYS）
+- **文档语言**: 所有文档使用简体中文，符合项目宪章要求
+- **可扩展性**: 如需添加减法、乘法等示例，可复用本项目结构
