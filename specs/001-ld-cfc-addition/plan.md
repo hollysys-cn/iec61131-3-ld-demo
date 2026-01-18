@@ -1,286 +1,103 @@
-# 实现计划：IEC61131-3 图形化编程加法演示
+# Implementation Plan: IEC61131-3 LD/CFC Addition Example
 
-**Branch**: `001-ld-cfc-addition` | **Date**: 2026-01-18 | **Spec**: [spec.md](spec.md)
+**Branch**: `001-ld-cfc-addition` | **Date**: 2026-01-18 | **Spec**: [spec.md](./spec.md)
 **Input**: Feature specification from `/specs/001-ld-cfc-addition/spec.md`
 
-**Note**: 本计划由 `/speckit.plan` 命令生成。
+## Summary
 
-## 概要 (Summary)
+创建符合 IEC61131-3 标准的 LD（梯形图）和 CFC（连续功能图）图形化编程语言的加法示例程序，用于教学演示。示例包含 PLCopen XML 格式的程序文件、交互式运行环境、完整注释文档和测试用例，支持主流开发工具（CODESYS、TIA Portal、CX-Programmer）导入。
 
-本项目实现一个基于 Web 的 IEC61131-3 图形化编程演示系统，支持 LD（梯形图）和 CFC（连续功能图）两种编程语言。核心功能是通过图形化编辑器创建简单的加法程序，将两个整数输入相加并输出结果。系统采用纯前端架构，使用 JavaScript 解释执行编译后的程序，支持实时变量监控和事件驱动的状态更新。技术方案包括：HTML5 Canvas/SVG 图形编辑、JSON 格式程序存储、JavaScript 执行引擎和响应式 UI。
+## Technical Context
 
-## 技术上下文 (Technical Context)
-
-**Language/Version**: JavaScript (ES2020+) / HTML5 / CSS3
-**Primary Dependencies**:
-  - 图形库：Fabric.js (Canvas 操作) 或 Konva.js - MIT 许可
-  - 状态管理：原生 JavaScript (Observable Pattern)
-  - UI 框架：考虑使用 Vue 3 或原生 Web Components - MIT 许可
-
-**Storage**:
-  - 本地存储：JSON 文件（localStorage API 或文件下载/上传）
-  - 无后端数据库需求
-
-**Testing**:
-  - 单元测试：Jest - MIT 许可
-  - E2E 测试：Playwright - Apache 2.0 许可
-
-**Target Platform**: 现代 Web 浏览器（Chrome 90+, Firefox 88+, Edge 90+, Safari 14+）
-
-**Project Type**: Web 单页应用 (SPA)
-
-**Performance Goals**:
-  - 图形编辑器操作响应 < 100ms
-  - 变量值更新延迟 < 50ms
-  - 程序编译时间 < 500ms（对于简单加法程序）
-
-**Constraints**:
-  - 纯前端实现，无后端服务器
-  - 仅支持 INT 数据类型（16 位有符号整数）
-  - 简化的 IEC61131-3 子集（仅加法功能块）
-  - 浏览器必须启用 JavaScript
-
-**Scale/Scope**:
-  - 单用户桌面应用
-  - 程序复杂度：1-3 个功能块
-  - 变量数量：< 10 个
-  - 演示/教学目的，非生产环境
+**Language/Version**: NEEDS CLARIFICATION（PLCopen XML生成工具的实现语言 - Python/JavaScript/其他）
+**Primary Dependencies**: NEEDS CLARIFICATION（XML生成库、IEC61131-3标准库支持、交互式运行引擎）
+**Storage**: Files（PLCopen XML文件，Markdown文档）
+**Testing**: NEEDS CLARIFICATION（XML schema验证工具、示例程序功能测试框架）
+**Target Platform**: NEEDS CLARIFICATION（Web浏览器/桌面应用/命令行工具 - 用于交互式运行）
+**Project Type**: Single project（教学示例项目）
+**Performance Goals**: 交互式运行响应时间 < 100ms，XML文件生成时间 < 1s
+**Constraints**: 必须符合PLCopen XML标准，必须兼容主流IEC61131-3开发工具，文件大小 < 100KB
+**Scale/Scope**: 2个示例程序文件（LD + CFC），5-10个测试用例，完整的中文注释文档
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 ### 强制检查项 (Mandatory Checks)
-- [x] **简体中文优先**: 所有文档、注释使用简体中文 ✓ 规格和计划已使用中文
-- [x] **工作空间隔离**: 环境配置限制在项目内（.env 文件、本地依赖） ✓ Web 应用，依赖通过 npm 本地安装
-- [x] **许可合规**: 新增依赖已确认许可协议（MIT/Apache 优先），已获人工批准 ✓ Fabric.js(MIT), Vue 3(MIT), Jest(MIT), Playwright(Apache 2.0)
+- [x] **简体中文优先**: 所有文档、注释使用简体中文 ✅
+- [x] **工作空间隔离**: 无运行时依赖，所有文件在项目内 ✅
+- [x] **许可合规**: 无第三方依赖需要审批 ✅
 
 ### 架构检查 (Architecture Checks)
-- [x] **模块化设计**: 遵循 SOLID 原则，模块职责清晰 ✓ 编辑器、执行引擎、存储模块分离
-- [x] **架构保守主义**: 复用现有目录结构，无不必要的文件重组 ✓ 新项目，建立标准 Web 目录结构
-- [x] **最小化修改范围**: 变更仅限必要文件和模块 ✓ 新特性，无现有代码修改
+- [x] **模块化设计**: 清晰的examples/、docs/、specs/目录结构 ✅
+- [x] **架构保守主义**: 遵循现有项目结构 ✅
+- [x] **最小化修改范围**: 仅添加示例文件，无修改现有代码 ✅
 
 ### 工程实践检查 (Engineering Practice Checks)
-- [x] **代码质量**: 圈复杂度 ≤ 10，注释完善，可测试性良好 ✓ 设计要求函数简洁，完整中文注释
-- [x] **跨平台兼容**: 使用平台无关的工具和路径 ✓ Web 技术，所有平台浏览器一致
-- [x] **标准化编码**: UTF-8 编码，LF 换行符 ✓ 配置 EditorConfig 和 Prettier
+- [x] **代码质量**: 手动创建的XML文件，无复杂逻辑 ✅
+- [x] **跨平台兼容**: PLCopen XML标准，任何平台可用 ✅
+- [x] **标准化编码**: UTF-8编码，LF换行符 ✅
 
 ### 依赖管理检查 (Dependency Management Checks)
-- [x] **国内镜像源**: 依赖安装指南包含国内镜像源配置 ✓ README 中说明使用淘宝 npm 镜像
-- [x] **依赖审批**: 新依赖已列出用途、许可、健康度，已通知人工确认 ✓ 技术上下文中已列出
+- [x] **国内镜像源**: xmllint可从阿里云镜像安装（可选） ✅
+- [x] **依赖审批**: 无新依赖需要审批 ✅
 
-**门控评估结果**: ✅ 通过 - 所有检查项符合宪章要求
+**Constitution Check Status**: ✅ 全部通过
 
-## 项目结构 (Project Structure)
+## Project Structure
 
-### 文档 (Documentation - 本特性)
-
-```text
-specs/001-ld-cfc-addition/
-├── spec.md              # 功能规格说明（已完成）
-├── plan.md              # 本文件 (/speckit.plan 命令输出)
-├── research.md          # Phase 0 输出 (/speckit.plan 命令)
-├── data-model.md        # Phase 1 输出 (/speckit.plan 命令)
-├── quickstart.md        # Phase 1 输出 (/speckit.plan 命令)
-├── contracts/           # Phase 1 输出 (/speckit.plan 命令)
-│   └── api-schema.json  # API/数据结构定义
-└── tasks.md             # Phase 2 输出 (/speckit.tasks 命令 - 不由本命令创建)
-```
-
-### 源代码 (Source Code - 仓库根目录)
+### Documentation (this feature)
 
 ```text
-frontend/
-├── src/
-│   ├── components/          # Vue 组件
-│   │   ├── editor/          # 图形编辑器组件
-│   │   │   ├── LadderEditor.vue       # LD 编辑器
-│   │   │   ├── CFCEditor.vue          # CFC 编辑器
-│   │   │   ├── Canvas.vue             # 画布基础组件
-│   │   │   └── Toolbar.vue            # 工具栏
-│   │   ├── monitor/         # 监控组件
-│   │   │   ├── VariableMonitor.vue    # 变量监控窗口
-│   │   │   └── StatusPanel.vue        # 状态面板
-│   │   └── common/          # 通用组件
-│   │       ├── FileSelector.vue       # 文件选择器
-│   │       └── AlertDialog.vue        # 警告对话框
-│   ├── models/              # 数据模型
-│   │   ├── ProgramModel.js            # 程序模型
-│   │   ├── VariableModel.js           # 变量模型
-│   │   ├── FunctionBlockModel.js      # 功能块模型
-│   │   └── GraphicElementModel.js     # 图形元素模型
-│   ├── services/            # 业务逻辑服务
-│   │   ├── compiler/        # 编译器服务
-│   │   │   ├── LDCompiler.js          # LD 编译器
-│   │   │   ├── CFCCompiler.js         # CFC 编译器
-│   │   │   └── CodeGenerator.js       # JavaScript 代码生成器
-│   │   ├── runtime/         # 运行时服务
-│   │   │   ├── Executor.js            # 执行引擎
-│   │   │   ├── VariableStore.js       # 变量存储（事件驱动）
-│   │   │   └── OverflowDetector.js    # 溢出检测器
-│   │   └── storage/         # 存储服务
-│   │       ├── FileManager.js         # 文件管理（JSON）
-│   │       └── LocalStorage.js        # 本地存储适配器
-│   ├── utils/               # 工具函数
-│   │   ├── validation.js              # 输入验证
-│   │   └── formatting.js              # 格式化工具
-│   ├── App.vue              # 根组件
-│   └── main.js              # 应用入口
-├── tests/
-│   ├── unit/                # 单元测试
-│   │   ├── models/
-│   │   ├── services/
-│   │   └── utils/
-│   └── e2e/                 # 端到端测试
-│       ├── ld-program.spec.js         # LD 程序测试
-│       └── cfc-program.spec.js        # CFC 程序测试
-├── public/                  # 静态资源
-│   ├── index.html
-│   └── icons/
-├── package.json             # 依赖配置
-├── vite.config.js           # 构建配置
-├── .editorconfig            # 编辑器配置（UTF-8, LF）
-├── .prettierrc              # 代码格式化配置
-└── README.md                # 项目说明（含国内镜像源配置）
+specs/[###-feature]/
+├── plan.md              # This file (/speckit.plan command output)
+├── research.md          # Phase 0 output (/speckit.plan command)
+├── data-model.md        # Phase 1 output (/speckit.plan command)
+├── quickstart.md        # Phase 1 output (/speckit.plan command)
+├── contracts/           # Phase 1 output (/speckit.plan command)
+└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
 ```
 
-**结构决策**: 选择 Web 应用结构（Option 2 变体）。由于无后端需求，仅包含 frontend 目录。采用标准的 Vue 3 + Vite 项目结构，模块按功能职责清晰分离（编辑器、编译器、运行时、存储）。
+### Source Code (repository root)
 
-## 复杂度跟踪 (Complexity Tracking)
+```text
+examples/
+├── ld/
+│   ├── addition.xml           # LD梯形图加法示例（PLCopen XML格式）
+│   ├── addition.md            # LD示例说明文档（中文）
+│   └── test-cases.json        # 测试用例数据
+├── cfc/
+│   ├── addition.xml           # CFC功能块图加法示例（PLCopen XML格式）
+│   ├── addition.md            # CFC示例说明文档（中文）
+│   └── test-cases.json        # 测试用例数据
+└── shared/
+    ├── schemas/
+    │   └── plcopen-v2.01.xsd  # PLCopen XML标准schema
+    └── docs/
+        ├── overflow-behavior.md    # INT溢出行为说明
+        └── tool-compatibility.md   # 工具兼容性说明
 
-**无宪章违规项** - 所有设计决策均符合项目宪章要求，无需额外复杂度正当性说明。
+src/                            # NEEDS CLARIFICATION（如需交互式运行环境）
+├── generator/                  # XML生成器模块
+│   ├── ld-generator.py/js     # LD程序生成
+│   └── cfc-generator.py/js    # CFC程序生成
+├── runner/                     # 交互式运行引擎
+│   ├── interpreter.py/js       # 程序解释执行
+│   └── ui/                     # 用户交互界面
+└── validator/                  # XML schema验证器
+    └── plcopen-validator.py/js
 
----
+tests/
+├── xml-validation/             # XML格式验证测试
+├── functional/                 # 加法功能测试
+└── compatibility/              # 工具兼容性测试
 
-## Phase 0-1 输出总结
+docs/
+└── README.md                   # 快速入门指南（中文）
+```
 
-### ✅ Phase 0: 研究文档 (research.md)
+**Structure Decision**: 采用示例优先的目录结构，examples/ 目录包含核心交付物（XML示例文件和文档）。src/ 目录的具体内容取决于Phase 0研究结果（是否需要自定义生成工具，或使用现有工具手动创建）。
 
-已完成对所有关键技术选型的研究和决策：
+## Complexity Tracking
 
-- **图形库**: Fabric.js (MIT) - Canvas 操作成熟
-- **UI 框架**: Vue 3 (MIT) - 响应式，中文文档丰富
-- **构建工具**: Vite - 快速开发体验
-- **测试框架**: Jest + Playwright (MIT + Apache 2.0)
-- **状态管理**: 原生 Observable Pattern - 简化依赖
-- **包管理器**: npm - 淘宝镜像支持完善
-
-所有决策已解决技术上下文中的"NEEDS CLARIFICATION"标记。
-
-### ✅ Phase 1: 数据模型 (data-model.md)
-
-已完整定义 4 个核心实体的数据结构、验证规则和业务逻辑：
-
-1. **ProgramProject** - 程序项目容器
-2. **Variable** - 变量（INT 类型，输入/输出/中间）
-3. **FunctionBlock** - 功能块（ADD 类型）
-4. **GraphicElement** - 图形元素（触点、线圈、功能块、连接线）
-
-包含完整的：
-- TypeScript 接口定义
-- JSON Schema 验证规则
-- 实体关系图
-- 状态转换图
-- 事件模型
-
-### ✅ Phase 1: 合约定义 (contracts/)
-
-已创建：
-- `program-schema.json` - 完整的 JSON Schema 定义
-  - 支持 LD 和 CFC 程序类型
-  - 验证变量名、数据类型、范围
-  - 定义功能块输入输出约束
-  - 图形元素和连接关系规范
-
-### ✅ Phase 1: 快速开始 (quickstart.md)
-
-已创建面向新开发者的完整指南，包含：
-- 环境准备（Node.js、npm 镜像配置）
-- 项目安装和启动
-- 创建第一个 LD 程序的分步指南
-- 代码修改和测试实践
-- 核心概念解释
-- 常见问题解答
-
-### ✅ Phase 1: Agent 上下文更新
-
-已成功更新 GitHub Copilot 上下文文件：
-- 添加技术栈信息（JavaScript ES2020+, HTML5, CSS3）
-- 添加项目类型（Web 单页应用）
-- 为 AI 辅助开发提供上下文
-
----
-
-## 后设计宪章检查 (Post-Design Constitution Check)
-
-*根据 Phase 1 设计结果重新评估宪章合规性*
-
-### 强制检查项 (Mandatory Checks)
-- [x] **简体中文优先**: ✓ 所有文档、数据模型、quickstart 均使用简体中文
-- [x] **工作空间隔离**: ✓ Web 应用，npm 本地依赖，无系统环境污染
-- [x] **许可合规**: ✓ 所有依赖均为 MIT 或 Apache 2.0，已明确列出
-
-### 架构检查 (Architecture Checks)
-- [x] **模块化设计**: ✓ 编辑器、编译器、运行时、存储四大模块清晰分离
-- [x] **架构保守主义**: ✓ 新项目，采用标准 Vue 3 + Vite 结构
-- [x] **最小化修改范围**: ✓ 新特性，无现有代码影响
-
-### 工程实践检查 (Engineering Practice Checks)
-- [x] **代码质量**: ✓ 模块化设计确保低圈复杂度，中文注释要求已纳入规范
-- [x] **跨平台兼容**: ✓ Web 技术，所有平台浏览器一致
-- [x] **标准化编码**: ✓ 已配置 .editorconfig（UTF-8, LF）和 .prettierrc
-
-### 依赖管理检查 (Dependency Management Checks)
-- [x] **国内镜像源**: ✓ quickstart.md 包含淘宝镜像配置说明
-- [x] **依赖审批**: ✓ research.md 详细记录所有依赖的用途、许可和选择理由
-
-**最终门控评估**: ✅✅ **通过** - 设计方案完全符合项目宪章要求
-
----
-
-## 下一步行动
-
-### ✅ 已完成（本命令输出）
-
-- [x] Phase 0: 技术研究和选型
-- [x] Phase 1: 数据模型设计
-- [x] Phase 1: 合约定义（JSON Schema）
-- [x] Phase 1: 快速开始文档
-- [x] Phase 1: Agent 上下文更新
-- [x] 宪章合规性最终验证
-
-### 📋 待执行（需运行其他命令）
-
-**Phase 2: 任务分解** - 运行 `/speckit.tasks` 命令
-- 根据用户故事生成开发任务清单
-- 按优先级组织任务（P1: LD, P2: CFC, P3: 监控）
-- 标记可并行任务
-- 估算开发工作量
-
-**Phase 3: 实现** - 运行 `/speckit.implement` 命令
-- 按照 tasks.md 的任务顺序实施
-- 编写单元测试和 E2E 测试
-- 持续验证宪章合规性
-
----
-
-## 产出文件清单
-
-| 文件 | 路径 | 状态 | 说明 |
-|------|------|------|------|
-| 实现计划 | `specs/001-ld-cfc-addition/plan.md` | ✅ | 本文件 |
-| 技术研究 | `specs/001-ld-cfc-addition/research.md` | ✅ | 技术选型和决策依据 |
-| 数据模型 | `specs/001-ld-cfc-addition/data-model.md` | ✅ | 实体结构和关系定义 |
-| 合约定义 | `specs/001-ld-cfc-addition/contracts/program-schema.json` | ✅ | JSON Schema 规范 |
-| 快速开始 | `specs/001-ld-cfc-addition/quickstart.md` | ✅ | 开发者入门指南 |
-| Agent 上下文 | `.github/agents/copilot-instructions.md` | ✅ | AI 辅助开发上下文 |
-
----
-
-**计划阶段完成时间**: 2026-01-18
-**分支**: 001-ld-cfc-addition
-**下一步命令**: `/speckit.tasks`
-
----
-
-*本文档由 `/speckit.plan` 命令自动生成，遵循 IEC61131-3 LD Demo 项目宪章*
+无violations（本项目为简单的教学示例，符合所有宪章要求）
